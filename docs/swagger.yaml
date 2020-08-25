@@ -1,0 +1,130 @@
+basePath: /
+definitions:
+  handler.Points_Add_Response:
+    properties:
+      error:
+        type: string
+      point:
+        $ref: '#/definitions/model.Point'
+        type: object
+    type: object
+  handler.Points_Logs_Response:
+    properties:
+      count:
+        type: integer
+      error:
+        type: string
+      rows:
+        items:
+          $ref: '#/definitions/model.Point'
+        type: array
+    type: object
+  handler.Points_Queue_Response:
+    properties:
+      error:
+        type: string
+      point:
+        $ref: '#/definitions/model.Point'
+        type: object
+    type: object
+  model.Point:
+    properties:
+      delta:
+        type: integer
+      id:
+        type: string
+      processAt:
+        type: integer
+      queueAt:
+        type: integer
+      sum:
+        type: integer
+      userId:
+        type: string
+    type: object
+host: 127.0.0.1:1323
+info:
+  contact:
+    name: Kiswono Prayogo
+  license: {}
+  title: TPoints
+  version: "1.0"
+paths:
+  /points/add/{userId}/{delta}:
+    post:
+      consumes:
+      - application/json
+      description: sync point addition/subtraction
+      parameters:
+      - description: user id
+        in: path
+        name: userId
+        required: true
+        type: string
+      - description: can be positive or negative
+        in: path
+        name: delta
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.Points_Add_Response'
+      summary: add points to specific user now
+  /points/logs/{userId}/{limit}/{offset}:
+    get:
+      consumes:
+      - application/json
+      description: get processed logs
+      parameters:
+      - description: user id
+        in: path
+        name: userId
+        required: true
+        type: string
+      - description: 'page size, default: 10'
+        in: path
+        name: limit
+        required: true
+        type: integer
+      - description: 'page, default: 0'
+        in: path
+        name: offset
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.Points_Logs_Response'
+      summary: see user's point history
+  /points/queue/{userId}/{delta}:
+    post:
+      consumes:
+      - application/json
+      description: async/enqueue point change event
+      parameters:
+      - description: user id
+        in: path
+        name: userId
+        required: true
+        type: string
+      - description: can be positive or negative
+        in: path
+        name: delta
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.Points_Queue_Response'
+      summary: add points to specific user later
+swagger: "2.0"

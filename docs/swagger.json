@@ -1,0 +1,196 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "TPoints",
+        "contact": {
+            "name": "Kiswono Prayogo"
+        },
+        "license": {},
+        "version": "1.0"
+    },
+    "host": "127.0.0.1:1323",
+    "basePath": "/",
+    "paths": {
+        "/points/add/{userId}/{delta}": {
+            "post": {
+                "description": "sync point addition/subtraction",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "add points to specific user now",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "user id",
+                        "name": "userId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "can be positive or negative",
+                        "name": "delta",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/handler.Points_Add_Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/points/logs/{userId}/{limit}/{offset}": {
+            "get": {
+                "description": "get processed logs",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "see user's point history",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "user id",
+                        "name": "userId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "page size, default: 10",
+                        "name": "limit",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "page, default: 0",
+                        "name": "offset",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/handler.Points_Logs_Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/points/queue/{userId}/{delta}": {
+            "post": {
+                "description": "async/enqueue point change event",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "add points to specific user later",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "user id",
+                        "name": "userId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "can be positive or negative",
+                        "name": "delta",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/handler.Points_Queue_Response"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "handler.Points_Add_Response": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string"
+                },
+                "point": {
+                    "type": "object",
+                    "$ref": "#/definitions/model.Point"
+                }
+            }
+        },
+        "handler.Points_Logs_Response": {
+            "type": "object",
+            "properties": {
+                "count": {
+                    "type": "integer"
+                },
+                "error": {
+                    "type": "string"
+                },
+                "rows": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Point"
+                    }
+                }
+            }
+        },
+        "handler.Points_Queue_Response": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string"
+                },
+                "point": {
+                    "type": "object",
+                    "$ref": "#/definitions/model.Point"
+                }
+            }
+        },
+        "model.Point": {
+            "type": "object",
+            "properties": {
+                "delta": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "processAt": {
+                    "type": "integer"
+                },
+                "queueAt": {
+                    "type": "integer"
+                },
+                "sum": {
+                    "type": "integer"
+                },
+                "userId": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
