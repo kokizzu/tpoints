@@ -31,7 +31,7 @@ go test -bench=Clean -run=^$ # clean database, server must not be running
 go run main.go > /dev/null # ignoring logs
 go test -bench=Sync -run=^$ # server must run
 
-# best, worse for single threaded request
+# best-worst for single threaded request, realistic benchmark: logging enabled
 BenchmarkSync-8             1045           1020670 ns/op
 BenchmarkSync-8              634           1874949 ns/op
 
@@ -41,7 +41,7 @@ go test -bench=Clean -run=^$ # clean database, server must not be running
 go run main.go > /dev/null # ignoring logs
 go test -bench=Async -run=^$ # server must run
 
-# best, worse for single threaded request
+# best-worst for single threaded request, realistic benchmark: logging enabled
 BenchmarkAsync-8            4771            252726 ns/op
 BenchmarkAsync-8            4081            265111 ns/op
 ```
