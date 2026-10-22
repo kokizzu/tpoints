@@ -48,7 +48,8 @@ func (ctx *Ctx) IsError(err error,description string) bool {
 func InitServer() *Server {
 	server := &Server{}
 	var err error
-	ctx, _ := context.WithTimeout(context.Background(), 4*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 4*time.Second)
+	defer cancel()
 	// mongo
 	server.MongoClient, err = mongo.Connect(ctx, options.Client().ApplyURI(MONGO_URL))
 	L.PanicIf(err,`failed to connect to mongo`) 
